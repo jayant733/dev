@@ -43,7 +43,7 @@ const userSchema = new mongoose.Schema(
 
     gender: {
       type: String,
-      required: true,
+      
       enum : {
         values : ["male", "female", "neutral"],
         message  : `{$values} are not correct`
@@ -71,13 +71,20 @@ const userSchema = new mongoose.Schema(
       },
     photoUrl : {
       type : String,
-      validate(value){
-        if(validator.isURL(value)){
-          throw new Error("url is not valid ")  
+    //   validate(value){
+    //     if(validator.isURL(value)){
+    //       throw new Error("url is not valid ")  
 
-      }
-    }}
+    //   }
+    // }
+    } 
     ,
+    about : {
+      type : String,
+      minlength: 3,
+
+
+    }
 
 
   },

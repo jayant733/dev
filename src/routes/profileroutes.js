@@ -6,7 +6,7 @@ const profilerouter = express.Router();
 
 profilerouter.get("/searchbyid", async (req,res)=> {
     const id = await req.body._id;
-    console.log(id)
+   
     try{
             const user =  await User.findById({_id : id})
     
@@ -14,11 +14,11 @@ profilerouter.get("/searchbyid", async (req,res)=> {
     res.status(404).send("user not found ")
 }
 else{
-    console.log(user.firstName)   
+    
   
     res.send("the username of this userid is "+ user.firstName)
 }}catch(err){
-    console.log("something went wrong")
+   
     res.status(500).send("something went wrong")        
     
 }}) 
@@ -41,12 +41,12 @@ profilerouter.get("/profile/view", authenticateToken ,async (req, res)=> {
 
 profilerouter.patch("/update/:userId", async (req,res)=> {
     const id = req.params?.userId;
-    console.log(id)
+
 
     const update = req.body;
-    console.log(update)
+
     try{
-        const ALLOWED_UPDATES = ["firstName", "lastName", "skills", "password", "gender", "emailId"]
+        const ALLOWED_UPDATES = ["firstName", "lastName", "skills", "password", "gender", "emailId" , "about", "photoUrl"]
 
         const isallowedupdates = Object.keys(update).every((k)=>ALLOWED_UPDATES.includes(k))
         console.log(isallowedupdates) //this will return true if all the keys are allowed 
@@ -110,12 +110,13 @@ profilerouter.patch("/profile/edit" , authenticateToken, async (req, res)=> {
         if(validateeditdata(req))
         {
             const loggedinuser = req.user; //ye jo logged in user hai wo authenticationtoken se aa raha hai 
-            console.log(loggedinuser) 
-            Object.keys(req.body).forEach((key)=> loggedinuser[key]= req.body[key])
             console.log(loggedinuser)
-            res.send("user updated succesffuly")
+            Object.keys(req.body).forEach((key)=> loggedinuser[key]= req.body[key])
+            
+            await loggedinuser.save();
+             return res.send("user updated succesffuly")
 
-             await loggedinuser.save(); // will save the data in the database
+             // will save the data in the database
         } 
         else{
             throw new Error("invalid update")

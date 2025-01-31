@@ -1,18 +1,21 @@
-//here therer will be a library to connect to your database .js 
-//so we will use mongoose to connect to the database 
-//:- read the mongoose database 
+require('dotenv').config(); // Load environment variables
 
+const mongoose = require("mongoose");
 
-const mongoose = require("mongoose")
-
-//always wrap these function inside a async await 
-
+// MongoDB connection URI from environment variables
+const MONGODB_URI = process.env.MONGODBCONNECT;
 
 const connectDB = async () => {
-    await mongoose.connect("mongodb+srv://jayantsharma3228:jayantsharma@namastedev.bxcb3.mongodb.net/devChat")
+    try {
+        await mongoose.connect(MONGODB_URI);
+        console.log("MongoDB Connected...");
+    } catch (err) {
+        console.error(err.message);
+        // Exit process with failure
+        process.exit(1);
+    }
 }
 
-
-module.exports ={
+module.exports = {
     connectDB
 }

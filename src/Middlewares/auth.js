@@ -4,7 +4,7 @@ const authenticateToken = async (req, res, next) => {
   const cookies = req.cookies;
   const { token } = cookies;
   if (!token) {
-    return res.sendStatus(401).send("please login again")
+    return res.sendStatus(401)
   }
 
 

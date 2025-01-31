@@ -15,7 +15,7 @@ authrouter.post("/signup", async (req,res)=> {
      
      validatesignupdata(req)
     
-     const {firstName, lastName, emailId, password, gender} = req.body;
+     const {firstName, lastName, emailId, password, photoUrl , skills , about  , gender} = req.body;
  
      const hashedpassword = await bcrypt.hash(password , 8); //this will hash the password and will return a promise
  
@@ -24,11 +24,23 @@ authrouter.post("/signup", async (req,res)=> {
          lastName,
          emailId,
          password : hashedpassword,
-         gender
+         gender,
+         photoUrl,
+         skills,
+         about , 
      }) //creating a new instance of the user model and new the name of the model and the data 
-     await user.save() //.sabe will return u a promise and will store a data in database 
-     console.log("user send  ")
-     res.send("user added successfully ") //most of the mongoose will return a promise 
+    //.sabe will return u a promise and will store a data in database
+     
+    const saveduser =  await user.save()
+    const token = await saveduser.getJWT();
+
+    res.cookie("token", token, {
+        expires : new Date(Date.now() + 1000000),
+    })
+
+    
+    
+    res.send({message : "user added successfully ", data :saveduser}) //most of the mongoose will return a promise 
     } catch(err){
      console.log(err)
      res.status(400).send(err.message)
@@ -56,7 +68,7 @@ authrouter.post("/signup", async (req,res)=> {
 
         const token = await user.getJWT();
         res.cookie("token", token, {
-            expires: new Date(Date.now() + 900000),
+            expires: new Date(Date.now() + 1000000),
             httpOnly: true,
         });
         return res.send(user);

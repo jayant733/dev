@@ -13,7 +13,7 @@ userrouter.get("/user/requests/recieved", authenticateToken, async ( req, res)=>
         const connectionrequest = await ConnectionrequestModel.find({
             toUserId : loggedinuser._id,
             status : "interested" //if we dont write this then ignored will also come 
-        }).populate("fromUserId", ["firstName", "lastName", "emailId",  ])
+        }).populate("fromUserId", ["firstName", "lastName", "emailId", "age" , "gender", "about" ])
         //populate se fromuserid pass kari as first parameter and second parameter me jo bhi chahiye vo pass kara
         
         
@@ -26,12 +26,12 @@ userrouter.get("/user/requests/recieved", authenticateToken, async ( req, res)=>
 
     }
     catch(err){
-        console.log(err.message)
+
         res.status(500).send("something went wrong")
     }
 })
 
-const USER_SAFE_DATA = "firstName lastName emailId"
+const USER_SAFE_DATA = "firstName lastName emailId age gender about photoUrl"
 //the people whom you are matched with or connected with
 userrouter.get("/user/connections", authenticateToken , async (req, res)=> {
     try{
@@ -41,8 +41,9 @@ userrouter.get("/user/connections", authenticateToken , async (req, res)=> {
                 { toUserId : loggedinuser._id, status :"accepted"},
                 {fromUserId : loggedinuser._id, status : "accepted"}
             ]
-
+      
         }).populate("fromUserId", USER_SAFE_DATA).populate("toUserId", USER_SAFE_DATA)
+        console.log(connectionrequest)
         res.json({
             message : "data fetched successfully",
             data : connectionrequest

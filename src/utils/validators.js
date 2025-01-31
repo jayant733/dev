@@ -23,7 +23,7 @@ const validatesignupdata = (req)=> {
 }
 
 const validateeditdata = (req) => {
-   const allowededitfeilds = ["firstName" , "lastName", "photoUrl", "gender", "age", "skills"]
+   const allowededitfeilds = ["firstName" , "lastName", "photoUrl", "gender", "age", "skills", "about"]
     const iseeditallowed = Object.keys(req.body).every((keys)=> allowededitfeilds.includes(keys))
 
     return iseeditallowed

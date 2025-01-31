@@ -13,10 +13,10 @@ requestrouter.post("/request/send/:status/:toUserId" ,authenticateToken, async (
       const {status , toUserId} = req.params; 
         
 
-        const allowedstatus = ["ignored", "interested"]
+        const allowedstatus = ["ignored", "accepted"]
         if(!allowedstatus.includes(status)){
-            res.status(400).send("invalid status type")
-            throw new Error("invalid status type")
+            return res.status(400).send("invalid status type")
+           
 
         }
         //will check if the touserexits then only we can send the request
@@ -52,14 +52,14 @@ requestrouter.post("/request/send/:status/:toUserId" ,authenticateToken, async (
         })
 
         const data = await connectionrequest.save()
-        res.json({
+        return res.json({
             message : 
             req.user.firstName + " is interested in " + touser.firstName,
             data : data
         }) 
     }catch(err){
         console.log(err.message)
-       res.send(err.message)
+      return  res.send(err.message)
     }
 
 
